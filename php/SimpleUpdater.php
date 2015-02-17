@@ -87,6 +87,7 @@ class SimpleUpdater
                 }
             }
             file_put_contents($this->updateAbleFile, $this->file);
+            static::rrmdir($tmp);
             return true;
         }
         static::rrmdir($tmp);
