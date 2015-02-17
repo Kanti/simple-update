@@ -19,13 +19,23 @@ class SimpleUpdater
 
     public function isUpdateAble()
     {
-        $this->file = @file_get_contents($this->server);
         if (file_exists($this->updateAbleFile)) {
-            if ($this->file == file_get_contents($this->updateAbleFile)) {
+            if ((time() - filemtime($this->updateAbleFile) >= 60 * 60)) {//1h
+                $this->file = @file_get_contents($this->server);
+                if ($this->file == file_get_contents($this->updateAbleFile)) {
+                    //touch($this->updateAbleFile);
+                    file_put_contents($this->updateAbleFile, $this->file);
+                    return false;
+                } else {
+                    return true;
+                }
+            } else {
                 return false;
             }
+        } else {
+            $this->file = @file_get_contents($this->server);
+            return true;
         }
-        return true;
     }
 
     public static function download($src, $tmp)
@@ -71,7 +81,7 @@ class SimpleUpdater
 
     public function update()
     {
-        if(! $this->file){
+        if (!$this->file) {
             return false;
         }
         $tmp = "tmp.zip";
