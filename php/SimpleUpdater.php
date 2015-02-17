@@ -6,6 +6,7 @@ class SimpleUpdater
 {
     protected $updateAbleFile = "version.json";
     protected $server = "";
+    protected $file = "";
 
     public function __construct($server, $updateAbleFile = null)
     {
@@ -70,6 +71,9 @@ class SimpleUpdater
 
     public function update()
     {
+        if(! $this->file){
+            return false;
+        }
         $tmp = "tmp.zip";
         $data = json_decode($this->file);
 
