@@ -19,8 +19,8 @@ class SimpleUpdater
 
     public function isUpdateAble()
     {
+        $this->file = @file_get_contents($this->server);
         if (file_exists($this->updateAbleFile)) {
-            $this->file = @file_get_contents($this->server);
             if ($this->file == file_get_contents($this->updateAbleFile)) {
                 return false;
             }
@@ -44,7 +44,7 @@ class SimpleUpdater
     {
         $zip = new \ZipArchive();
         if ($zip->open($file) === true) {
-            $zip->extractTo("./");
+            $zip->extractTo(getcwd());
             $zip->close();
             return true;
         } else {
@@ -59,7 +59,7 @@ class SimpleUpdater
             $objects = scandir($dir);
             foreach ($objects as $object) {
                 if ($object != "." && $object != "..") {
-                    if (filetype($dir . "/" . $object) == "dir") rrmdir($dir . "/" . $object); else unlink($dir . "/" . $object);
+                    if (filetype($dir . "/" . $object) == "dir") static::rrmdir($dir . "/" . $object); else unlink($dir . "/" . $object);
                 }
             }
             reset($objects);
@@ -77,7 +77,7 @@ class SimpleUpdater
         $tmp = "tmp.zip";
         $data = json_decode($this->file);
 
-        if (property_exists($data, "download")
+        if (is_object($data) && property_exists($data, "download")
             && static::download($data->download, $tmp)
             && static::unzip($tmp)
         ) {
