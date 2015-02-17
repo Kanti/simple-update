@@ -19,7 +19,8 @@ class SimpleUpdater
     public function isUpdateAble()
     {
         if (file_exists($this->updateAbleFile)) {
-            if (file_get_contents($this->updateAbleFile) == @file_get_contents($this->server)) {
+            $this->file = @file_get_contents($this->server);
+            if ($this->file == file_get_contents($this->updateAbleFile)) {
                 return false;
             }
         }
@@ -70,7 +71,7 @@ class SimpleUpdater
     public function update()
     {
         $tmp = "tmp.zip";
-        $data = json_decode(file_get_contents($this->server));
+        $data = json_decode($this->file);
 
         if (property_exists($data,"download")
             && static::download($data->download, $tmp)
