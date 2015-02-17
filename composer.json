@@ -1,0 +1,9 @@
+{
+    "name": "kanti/simple-update",
+    "license": "MIT",
+    "autoload":{
+        "psr-4":{
+            "Kanti\\": "php"
+        }
+    }
+}
