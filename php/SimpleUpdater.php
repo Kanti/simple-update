@@ -73,15 +73,16 @@ class SimpleUpdater
         $tmp = "tmp.zip";
         $data = json_decode($this->file);
 
-        if (property_exists($data,"download")
+        if (property_exists($data, "download")
             && static::download($data->download, $tmp)
             && static::unzip($tmp)
         ) {
-            if (property_exists($data,"delete")) {
+            if (property_exists($data, "delete")) {
                 foreach ($data->delete as $file) {
                     static::rrmdir($file);
                 }
             }
+            file_put_contents($this->updateAbleFile, $this->file);
             return true;
         }
         static::rrmdir($tmp);
